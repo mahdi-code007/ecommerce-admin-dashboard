@@ -193,9 +193,7 @@ export function CouponFormDialog({
               <Input
                 id="coupon-discount"
                 inputMode="decimal"
-                placeholder={
-                  form.watch("discountType") === "percentage" ? "10" : "5.00"
-                }
+                placeholder="10"
                 aria-invalid={!!form.formState.errors.discountValue}
                 {...form.register("discountValue")}
               />
