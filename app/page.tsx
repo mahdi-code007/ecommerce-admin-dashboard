@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { PageSpinner } from "@/components/auth/page-spinner";
-import { useAuth } from "@/lib/auth/auth-context";
+import { PageSpinner } from "@/features/auth/page-spinner";
+import { useAuth } from "@/features/auth/context";
 
 export default function HomePage() {
   const { status } = useAuth();
@@ -11,7 +11,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.replace("/products");
+      router.replace("/dashboard");
     }
 
     if (status === "unauthenticated") {
