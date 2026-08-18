@@ -1,5 +1,5 @@
-import { AuthGuard } from "@/components/auth/auth-guard";
-import { AdminShell } from "@/components/layout/admin-shell";
+import { AuthGuard } from "@/features/auth/guards";
+import { AdminShell } from "@/shared/components/layout/admin-shell";
 
 export default function AdminLayout({
   children,

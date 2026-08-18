@@ -1,5 +1,5 @@
-import { ProductsView } from "@/components/products/products-view";
+import { ProductsPage } from "@/features/products/products-page";
 
-export default function ProductsPage() {
-  return <ProductsView />;
+export default function Page() {
+  return <ProductsPage />;
 }

@@ -28,7 +28,7 @@ export function GuestGuard({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.replace("/products");
+      router.replace("/dashboard");
     }
   }, [router, status]);
 

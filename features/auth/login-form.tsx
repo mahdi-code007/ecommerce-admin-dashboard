@@ -32,7 +32,7 @@ export function LoginForm() {
     try {
       await login(values.email, values.password);
       toast.success("Welcome back");
-      router.replace("/products");
+      router.replace("/dashboard");
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     }
