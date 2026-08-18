@@ -2,8 +2,8 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { EyeIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
 import type { Order } from "@/features/orders/types";
 import { formatMoney } from "@/shared/lib/money";
 
@@ -30,11 +30,7 @@ export function getOrderColumns({
     {
       accessorKey: "status",
       header: "Status",
-      cell: ({ row }) => (
-        <Badge variant="secondary" className="capitalize">
-          {row.original.status}
-        </Badge>
-      ),
+      cell: ({ row }) => <OrderStatusBadge status={row.original.status} />,
     },
     {
       accessorKey: "total",

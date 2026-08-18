@@ -16,6 +16,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
 import { useOrder, useUpdateOrderStatus } from "@/features/orders/queries";
 import {
   STATUS_TRANSITIONS,
@@ -57,9 +58,9 @@ export function OrderDetailsSheet({
           ) : (
             <>
               <div className="space-y-1 text-sm">
-                <p>
-                  <span className="text-muted-foreground">Status:</span>{" "}
-                  <span className="capitalize">{order.status}</span>
+                <p className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Status:</span>
+                  <OrderStatusBadge status={order.status} />
                 </p>
                 <p>
                   <span className="text-muted-foreground">Payment:</span>{" "}
