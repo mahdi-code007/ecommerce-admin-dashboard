@@ -8,6 +8,10 @@ type CouponListParams = ListParams & {
   isActive?: boolean;
 };
 
+type StatsOverviewParams = {
+  range: "7d" | "30d" | "90d";
+};
+
 export const queryKeys = {
   auth: {
     me: ["auth", "me"] as const,
@@ -32,5 +36,10 @@ export const queryKeys = {
   coupons: {
     all: ["coupons"] as const,
     list: (params: CouponListParams) => ["coupons", "list", params] as const,
+  },
+  stats: {
+    all: ["stats"] as const,
+    overview: (params: StatsOverviewParams) =>
+      ["stats", "overview", params] as const,
   },
 };

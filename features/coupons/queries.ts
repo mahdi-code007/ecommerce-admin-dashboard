@@ -26,7 +26,10 @@ export function useCreateCoupon() {
   return useMutation({
     mutationFn: createCoupon,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.coupons.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.coupons.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }
@@ -43,7 +46,10 @@ export function useUpdateCoupon() {
       input: UpdateCouponInput;
     }) => updateCoupon(id, input),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.coupons.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.coupons.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }
@@ -54,7 +60,10 @@ export function useDeleteCoupon() {
   return useMutation({
     mutationFn: deleteCoupon,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.coupons.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.coupons.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }

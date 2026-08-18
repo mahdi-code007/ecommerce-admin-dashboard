@@ -34,7 +34,10 @@ export function useCreateProduct() {
   return useMutation({
     mutationFn: createProduct,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.products.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }
@@ -51,7 +54,10 @@ export function useUpdateProduct() {
       input: UpdateProductInput;
     }) => updateProduct(id, input),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.products.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }
@@ -62,7 +68,10 @@ export function useDeleteProduct() {
   return useMutation({
     mutationFn: deleteProduct,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.products.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.products.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }

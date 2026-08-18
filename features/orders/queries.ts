@@ -39,7 +39,10 @@ export function useUpdateOrderStatus() {
       status: UpdateableOrderStatus;
     }) => updateOrderStatus(orderId, status),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queryKeys.orders.all });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.orders.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.stats.all }),
+      ]);
     },
   });
 }
