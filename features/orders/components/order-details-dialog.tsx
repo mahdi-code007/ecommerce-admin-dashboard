@@ -1,7 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -9,13 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
 import { OrderStatusBadge } from "@/features/orders/components/order-status-badge";
 import { useOrder, useUpdateOrderStatus } from "@/features/orders/queries";
 import {
@@ -24,39 +26,49 @@ import {
 } from "@/features/orders/types";
 import { getApiErrorMessage } from "@/shared/api/errors";
 import { formatMoney } from "@/shared/lib/money";
-import { useState } from "react";
 
-type OrderDetailsSheetProps = {
+type OrderDetailsDialogProps = {
   orderId: string | null;
   onOpenChange: (open: boolean) => void;
 };
 
-export function OrderDetailsSheet({
+export function OrderDetailsDialog({
   orderId,
   onOpenChange,
-}: OrderDetailsSheetProps) {
+}: OrderDetailsDialogProps) {
   const orderQuery = useOrder(orderId);
   const updateStatus = useUpdateOrderStatus();
-  const [nextStatus, setNextStatus] = useState<string>("");
+  const [nextStatus, setNextStatus] = useState("");
   const order = orderQuery.data;
   const allowedStatuses = order ? STATUS_TRANSITIONS[order.status] : [];
 
+  function handleOpenChange(open: boolean) {
+    if (!open) {
+      setNextStatus("");
+    }
+
+    onOpenChange(open);
+  }
+
   return (
-    <Sheet open={Boolean(orderId)} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle>Order details</SheetTitle>
-          <SheetDescription>
-            {orderId ? `ID ${orderId.slice(0, 8)}` : "Select an order"}
-          </SheetDescription>
-        </SheetHeader>
-        <div className="space-y-5 p-4">
-          {orderQuery.isLoading ? (
-            <p className="text-sm text-muted-foreground">Loading order...</p>
-          ) : orderQuery.isError || !order ? (
-            <p className="text-sm text-destructive">Could not load this order.</p>
-          ) : (
-            <>
+    <Dialog open={Boolean(orderId)} onOpenChange={handleOpenChange}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Order details</DialogTitle>
+          <DialogDescription>
+            {orderId
+              ? `Review order ${orderId.slice(0, 8)} and update its fulfillment status.`
+              : "Select an order"}
+          </DialogDescription>
+        </DialogHeader>
+
+        {orderQuery.isLoading ? (
+          <p className="text-sm text-muted-foreground">Loading order...</p>
+        ) : orderQuery.isError || !order ? (
+          <p className="text-sm text-destructive">Could not load this order.</p>
+        ) : (
+          <>
+            <div className="grid gap-4">
               <div className="space-y-1 text-sm">
                 <p className="flex items-center gap-2">
                   <span className="text-muted-foreground">Status:</span>
@@ -117,38 +129,50 @@ export function OrderDetailsSheet({
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    type="button"
-                    disabled={!nextStatus || updateStatus.isPending}
-                    onClick={async () => {
-                      if (!nextStatus || !orderId) {
-                        return;
-                      }
-
-                      try {
-                        await updateStatus.mutateAsync({
-                          orderId,
-                          status: nextStatus as UpdateableOrderStatus,
-                        });
-                        toast.success("Order status updated");
-                        setNextStatus("");
-                      } catch (error) {
-                        toast.error(getApiErrorMessage(error));
-                      }
-                    }}
-                  >
-                    Update status
-                  </Button>
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
                   This order has no further status changes.
                 </p>
               )}
-            </>
-          )}
-        </div>
-      </SheetContent>
-    </Sheet>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => handleOpenChange(false)}
+              >
+                Close
+              </Button>
+              {allowedStatuses.length > 0 ? (
+                <Button
+                  type="button"
+                  disabled={!nextStatus || updateStatus.isPending}
+                  onClick={async () => {
+                    if (!nextStatus || !orderId) {
+                      return;
+                    }
+
+                    try {
+                      await updateStatus.mutateAsync({
+                        orderId,
+                        status: nextStatus as UpdateableOrderStatus,
+                      });
+                      toast.success("Order status updated");
+                      setNextStatus("");
+                    } catch (error) {
+                      toast.error(getApiErrorMessage(error));
+                    }
+                  }}
+                >
+                  Update status
+                </Button>
+              ) : null}
+            </DialogFooter>
+          </>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

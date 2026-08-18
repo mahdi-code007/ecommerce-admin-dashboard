@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { getOrderColumns } from "@/features/orders/components/order-columns";
-import { OrderDetailsSheet } from "@/features/orders/components/order-details-sheet";
+import { OrderDetailsDialog } from "@/features/orders/components/order-details-dialog";
 import { useOrders } from "@/features/orders/queries";
 import { ORDER_STATUSES, type OrderStatus } from "@/features/orders/types";
 import {
@@ -102,7 +102,7 @@ export function OrdersPage() {
         emptyLabel="No orders"
       />
 
-      <OrderDetailsSheet
+      <OrderDetailsDialog
         orderId={selectedOrderId}
         onOpenChange={(open) => {
           if (!open) {
