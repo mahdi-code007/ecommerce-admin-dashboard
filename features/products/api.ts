@@ -13,7 +13,7 @@ type ProductsResponse = PaginatedSuccess<{ products: Product[] }>;
 type BrandsResponse = PaginatedSuccess<{ brands: Brand[] }>;
 
 export async function getAdminProducts(params: ProductListParams) {
-  const response = await apiClient.get<ProductsResponse>("/admin/products", {
+  const response = await apiClient.get<ProductsResponse>("/products", {
     params: {
       page: params.page,
       limit: params.limit,
