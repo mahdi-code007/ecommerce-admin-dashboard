@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { PageSpinner } from "@/components/auth/page-spinner";
 import { useAuth } from "@/lib/auth/auth-context";
 
-export default function HomePage() {
+export function GuestGuard({ children }: { children: React.ReactNode }) {
   const { status } = useAuth();
   const router = useRouter();
 
@@ -13,11 +13,11 @@ export default function HomePage() {
     if (status === "authenticated") {
       router.replace("/products");
     }
-
-    if (status === "unauthenticated") {
-      router.replace("/login");
-    }
   }, [router, status]);
 
-  return <PageSpinner />;
+  if (status !== "unauthenticated") {
+    return <PageSpinner />;
+  }
+
+  return children;
 }
